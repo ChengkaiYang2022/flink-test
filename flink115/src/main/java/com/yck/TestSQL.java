@@ -18,7 +18,7 @@ public class TestSQL {
         TableEnvironment tableEnv = TableEnvironment.create(settings);
         tableEnv.executeSql("CREATE TABLE SourceTable (f0 String) with ('connector' = 'datagen','rows-per-second' = '1')");
         // WILL WORK WITH (EXCLUDING OPTIONS)
-        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable (EXCLUDING OPTIONS) ");
+        // tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable (EXCLUDING OPTIONS) ");
         // WILL NOT WORK WITHOUT (EXCLUDING OPTIONS)!
         tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable ");
         
