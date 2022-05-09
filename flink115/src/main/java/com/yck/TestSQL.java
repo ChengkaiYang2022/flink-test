@@ -20,8 +20,8 @@ public class TestSQL {
         // WILL WORK WITH (EXCLUDING OPTIONS)
         tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable (EXCLUDING OPTIONS) ");
         // WILL NOT WORK WITHOUT (EXCLUDING OPTIONS)!
-//        tableEnv.executeSql("CREATE TABLE SinkTable (product STRING) WITH ('connector' = 'blackhole') ");
-
+        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable ");
+        
         tableEnv.executeSql("INSERT INTO SinkTable SELECT f0 FROM SourceTable");
     }
 }
