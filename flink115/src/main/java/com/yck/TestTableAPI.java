@@ -28,7 +28,10 @@ public class TestTableAPI {
                 .build());
 
 // Create a sink table (using SQL DDL)
+        // WILL WORK WITH (EXCLUDING OPTIONS)
         tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE SourceTable (EXCLUDING OPTIONS) ");
+        // WILL NOT WORK WITHOUT (EXCLUDING OPTIONS)!
+//        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE SourceTable ");
 
 // Create a Table object from a Table API query
         Table table2 = tableEnv.from("SourceTable");
