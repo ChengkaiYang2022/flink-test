@@ -2,3 +2,5 @@
 *.iml
 /flink115/target/
 /flink114/target/
+/flinkcdcsqltest/target/
+/flinkcdcsqltest/dependency-reduced-pom.xml

@@ -4,11 +4,10 @@ CREATE TABLE table_a_sum (
                 ztmc STRING,
                  PRIMARY KEY(id) NOT ENFORCED
 ) WITH (
- 'connector' = 'mysql-cdc',
- 'hostname' = '192.168.56.101',
- 'port' = '3306',
- 'username' = 'root',
- 'password' = '123456',
- 'database-name' = 'test1',
- 'table-name' = 'table_a_sum'
+   'connector' = 'jdbc',
+   'url' = 'jdbc:mysql://192.168.56.101:3306/test1?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT',
+   'table-name' = 'table_a_sum',
+   'username' = 'root',
+   'password' = '123456',
+   'driver' = 'com.mysql.jdbc.Driver'
 )
