@@ -40,12 +40,14 @@ public class TestCDCSQL {
         }
 //        tEnv.executeSql("CREATE TABLE SourceTable (f0 String) with ('connector' = 'datagen','rows-per-second' = '1')");
 
-        tEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE table_a (EXCLUDING ALL) ");
+        tEnv.executeSql("CREATE TABLE SinkTable " +
+                "(id Int,f1 String, f2 String,PRIMARY KEY(id) NOT ENFORCED)" +
+                "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
 
         tEnv.executeSql("INSERT INTO SinkTable SELECT * FROM table_a"
-                        + " UNION ALL SELECT * FROM table_a_1"
-                        + " UNION ALL SELECT * FROM table_a_2"
-                +" UNION ALL SELECT * FROM table_a_3"
+//                        + " UNION ALL SELECT * FROM table_a_1"
+//                        + " UNION ALL SELECT * FROM table_a_2"
+//                +" UNION ALL SELECT * FROM table_a_3"
                 );
 //        tEnv.sqlQuery("select * from SinkTable").printSchema();
 //        env.execute();
