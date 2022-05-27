@@ -11,6 +11,7 @@
     <modules>
         <module>flink115</module>
         <module>flink114</module>
+        <module>flinkcdctest</module>
     </modules>
 
     <properties>
