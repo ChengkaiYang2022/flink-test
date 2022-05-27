@@ -1,7 +1,8 @@
 CREATE TABLE table_a_sum (
-               id INT NOT NULL,
+               id STRING NOT NULL,
                 ztid STRING,
                 ztmc STRING,
+                source STRING,
                  PRIMARY KEY(id) NOT ENFORCED
 ) WITH (
    'connector' = 'jdbc',

@@ -50,10 +50,11 @@ public class TestCDCSQL {
             tEnv.executeSql(getTableSql(path));
         }
 
-        tEnv.executeSql("INSERT INTO table_a_sum SELECT * FROM table_a"
-                        + " UNION ALL SELECT * FROM table_a_1"
-                        + " UNION ALL SELECT * FROM table_a_2"
-                +" UNION ALL SELECT * FROM table_a_3"
+        tEnv.executeSql("INSERT INTO table_a_sum " +
+                        "SELECT concat('table_a',cast(a0.id as varchar),'-'),a0.ztid,a0.ztmc,'table_a' FROM table_a a0"
+                        + " UNION ALL SELECT concat('table_a_1',cast(a1.id as varchar),'-'),a1.ztid,a1.ztmc,'table_a_1' FROM table_a_1 a1"
+                        + " UNION ALL SELECT concat('table_a_2',cast(a2.id as varchar),'-'),a2.ztid,a2.ztmc,'table_a_2' FROM table_a_2 a2"
+                        +" UNION ALL SELECT concat('table_a_3',cast(a3.id as varchar),'-'),a3.ztid,a3.ztmc,'table_a_3' FROM table_a_3 a3"
                 );
 
 
