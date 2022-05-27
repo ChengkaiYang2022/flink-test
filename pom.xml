@@ -12,6 +12,7 @@
         <module>flink115</module>
         <module>flink114</module>
         <module>flinkcdctest</module>
+        <module>flinkcdcsqltest</module>
     </modules>
 
     <properties>
