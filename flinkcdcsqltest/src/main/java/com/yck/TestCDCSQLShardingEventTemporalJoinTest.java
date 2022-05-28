@@ -21,10 +21,10 @@ public class TestCDCSQLShardingEventTemporalJoinTest {
     private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQLTest.class);
     private static final String[] DDL_PATH = {
             // source 表
-            "sql_simple_version/invoice.sql",
-            "sql_simple_version/ztxx.sql",
+            "sql_simple_version2/invoice.sql",
+            "sql_simple_version2/ztxx.sql",
             // sink 表
-            "sql_simple_version/ztxx_sink.sql"
+            "sql_simple_version2/ztxx_invoice_join_temporal_sink.sql"
     };
 
     public static void main(String[] args) {
@@ -39,18 +39,28 @@ public class TestCDCSQLShardingEventTemporalJoinTest {
         Configuration configuration = tEnv.getConfig().getConfiguration();
         // TODO 优化参数见 https://nightlies.apache.org/flink/flink-docs-master/zh/docs/dev/table/config/#%E6%A6%82%E8%A7%88
         configuration.setString("execution.checkpointing.interval", "3 s");
+        configuration.setString("table.local-time-zone", "Asia/Shanghai");
         // 1. 将分库分表的4张mysql表映射到flink的元数据中
         for (String path : DDL_PATH) {
             tEnv.executeSql(getTableDDL(path));
         }
+
         // 2. 插入到print table  输出表
 
-        tEnv.executeSql("CREATE TABLE ztxx_invoice_join_print_table " +
-                "(id INT,ztid String, fpid String,fpmc String,ztmc String,database_name String,table_name String, PRIMARY KEY(id) NOT ENFORCED)" +
+        tEnv.executeSql("CREATE TABLE ztxx_print_table " +
+                "(id INT,ztid String, ztmc String,database_name String,table_name String,update_time TIMESTAMP_LTZ(3), PRIMARY KEY(id) NOT ENFORCED)" +
                 "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
-        tEnv.executeSql("INSERT INTO ztxx_invoice_join_print_table " +
-                "SELECT a.id,a.ztid,a.fpid,a.fpmc,b.ztmc,a.database_name,a.table_name FROM invoice a left join ztxx b on a.ztid = b.ztid"
+        tEnv.executeSql("INSERT INTO ztxx_print_table " +
+                "SELECT id,ztid,ztmc,database_name,table_name,update_time FROM ztxx a0"
         );
+//        // 2. 插入到print table  输出表
+//
+//        tEnv.executeSql("CREATE TABLE ztxx_invoice_join_print_table " +
+//                "(id INT,ztid String, fpid String,fpmc String,ztmc String,database_name String,table_name String, PRIMARY KEY(id) NOT ENFORCED)" +
+//                "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
+//        tEnv.executeSql("INSERT INTO ztxx_invoice_join_print_table " +
+//                "SELECT a.id,a.ztid,a.fpid,a.fpmc,b.ztmc,a.database_name,a.table_name FROM invoice a left join ztxx b on a.ztid = b.ztid"
+//        );
 //        // 3. 插入到mysql  输出表
 //        tEnv.executeSql("INSERT INTO ztxx_sink " +
 //                "SELECT database_name,table_name,id,ztid,ztmc FROM ztxx a0"
