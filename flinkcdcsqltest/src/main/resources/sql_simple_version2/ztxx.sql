@@ -4,9 +4,9 @@ CREATE TABLE ztxx (
                 ztmc STRING,
                 database_name STRING METADATA VIRTUAL,
                 table_name STRING METADATA VIRTUAL,
-                    update_time TIMESTAMP_LTZ(3),
+                    update_time TIMESTAMP(3),
 
-                WATERMARK FOR update_time AS update_time,
+                WATERMARK FOR update_time AS update_time - INTERVAL '10' SECOND,
                 PRIMARY KEY(id) NOT ENFORCED
 ) WITH (
  'connector' = 'mysql-cdc',

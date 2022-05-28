@@ -5,8 +5,8 @@ CREATE TABLE invoice (
                 fpmc STRING,
     database_name STRING METADATA VIRTUAL,
     table_name STRING METADATA VIRTUAL,
-    update_time TIMESTAMP_LTZ(3),
-                    WATERMARK FOR update_time AS update_time,
+    update_time TIMESTAMP(3),
+                    WATERMARK FOR update_time AS update_time - INTERVAL '10' SECOND,
 
                  PRIMARY KEY(id) NOT ENFORCED
 ) WITH (

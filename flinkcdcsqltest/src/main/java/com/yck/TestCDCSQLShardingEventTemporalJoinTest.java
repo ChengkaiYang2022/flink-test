@@ -47,23 +47,22 @@ public class TestCDCSQLShardingEventTemporalJoinTest {
 
         // 2. 插入到print table  输出表
 
-        tEnv.executeSql("CREATE TABLE ztxx_print_table " +
-                "(id INT,ztid String, ztmc String,database_name String,table_name String,update_time TIMESTAMP_LTZ(3), PRIMARY KEY(id) NOT ENFORCED)" +
-                "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
-        tEnv.executeSql("INSERT INTO ztxx_print_table " +
-                "SELECT id,ztid,ztmc,database_name,table_name,update_time FROM ztxx a0"
-        );
-//        // 2. 插入到print table  输出表
-//
-//        tEnv.executeSql("CREATE TABLE ztxx_invoice_join_print_table " +
-//                "(id INT,ztid String, fpid String,fpmc String,ztmc String,database_name String,table_name String, PRIMARY KEY(id) NOT ENFORCED)" +
+//        tEnv.executeSql("CREATE TABLE ztxx_print_table " +
+//                "(id INT,ztid String, ztmc String,database_name String,table_name String,update_time TIMESTAMP_LTZ(3), PRIMARY KEY(id) NOT ENFORCED)" +
 //                "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
-//        tEnv.executeSql("INSERT INTO ztxx_invoice_join_print_table " +
-//                "SELECT a.id,a.ztid,a.fpid,a.fpmc,b.ztmc,a.database_name,a.table_name FROM invoice a left join ztxx b on a.ztid = b.ztid"
+//        tEnv.executeSql("INSERT INTO ztxx_print_table " +
+//                "SELECT id,ztid,ztmc,database_name,table_name,update_time FROM ztxx a0"
 //        );
-//        // 3. 插入到mysql  输出表
-//        tEnv.executeSql("INSERT INTO ztxx_sink " +
-//                "SELECT database_name,table_name,id,ztid,ztmc FROM ztxx a0"
-//        );
+        tEnv.executeSql("CREATE TABLE ztxx_invoice_join_print_table " +
+                "(id INT,ztid String, fpid String,fpmc String,ztmc String,database_name String,table_name String, PRIMARY KEY(id) NOT ENFORCED)" +
+                "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
+        tEnv.executeSql("INSERT INTO ztxx_invoice_join_print_table " +
+                "SELECT invoice.id,invoice.ztid,invoice.fpid," +
+                "invoice.fpmc,ztxx.ztmc,invoice.database_name,invoice.table_name " +
+                "FROM invoice " +
+                "left join ztxx " +
+                "FOR SYSTEM_TIME AS OF invoice.update_time " +
+                " on invoice.id = ztxx.id"
+        );
     }
 }
