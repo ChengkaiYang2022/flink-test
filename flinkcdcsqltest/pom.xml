@@ -162,7 +162,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.yck.TestCDCSQL</mainClass>
+                            <mainClass>com.yck.TestCDCSQLTest</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,22 +1,15 @@
 package com.yck;
 
-import org.apache.flink.calcite.shaded.com.google.common.io.Resources;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.TableEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.yck.FlinkTableTools.getTableDDL;
 
-public class TestCDCSQL {
-    private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQL.class);
+public class TestCDCSQLTest {
+    private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQLTest.class);
     private static final String[] DDL_PATH = {
             // 4个分库分表
             "sql/table.sql",

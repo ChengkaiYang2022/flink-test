@@ -1,15 +1,10 @@
 package com.yck;
 
-import org.apache.flink.calcite.shaded.com.google.common.io.Resources;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.TableEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
 
 import static com.yck.FlinkTableTools.getTableDDL;
 
@@ -18,12 +13,14 @@ import static com.yck.FlinkTableTools.getTableDDL;
  * 参考
  * https://ververica.github.io/flink-cdc-connectors/master/content/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/build-real-time-data-lake-tutorial-zh.html
  */
-public class TestCDCSQLSimpleVersion {
-    private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQL.class);
+public class TestCDCSQLShardingTest {
+    private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQLTest.class);
     private static final String[] DDL_PATH = {
-            // 4个分库分表
+            // source 表
             "sql_simple_version/invoice.sql",
-            "sql_simple_version/ztxx.sql"
+            "sql_simple_version/ztxx.sql",
+            // sink 表
+            "sql_simple_version/ztxx_sink.sql"
     };
 
     public static void main(String[] args) {
@@ -42,12 +39,17 @@ public class TestCDCSQLSimpleVersion {
         for (String path : DDL_PATH) {
             tEnv.executeSql(getTableDDL(path));
         }
+        // 2. 插入到print table  输出表
 
         tEnv.executeSql("CREATE TABLE ztxx_print_table " +
                 "(id INT,ztid String, ztmc String,database_name String,table_name String, PRIMARY KEY(id) NOT ENFORCED)" +
                 "WITH ('connector' = 'print','sink.parallelism'='1','standard-error'='true')  ");
         tEnv.executeSql("INSERT INTO ztxx_print_table " +
                 "SELECT id,ztid,ztmc,database_name,table_name FROM ztxx a0"
+        );
+        // 3. 插入到mysql  输出表
+        tEnv.executeSql("INSERT INTO ztxx_sink " +
+                "SELECT database_name,table_name,id,ztid,ztmc FROM ztxx a0"
         );
     }
 }
