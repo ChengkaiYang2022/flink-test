@@ -13,20 +13,18 @@ import static com.yck.FlinkTableTools.getTableDDL;
  * 按照 ztxx 关联，写入到
  * 插入到 ztxx_invoice_join_print_table 标准输出 和 mysql 结果表 ztxx_invoice_join_sink
  * 对应 test_2.ztxx_invoice_join
- * TODO 直接全局left join，全缓存，慎用！
+ * TODO 直接left join，全缓存，慎用！
  * 参考
  * https://ververica.github.io/flink-cdc-connectors/master/content/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/build-real-time-data-lake-tutorial-zh.html
  */
-public class TestCDCSQLShardingJoinTest {
+public class TestCDCSQLShardingEventTemporalJoinTest {
     private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQLTest.class);
     private static final String[] DDL_PATH = {
             // source 表
             "sql_simple_version/invoice.sql",
             "sql_simple_version/ztxx.sql",
             // sink 表
-            "sql_simple_version/ztxx_sink.sql",
-            "sql_simple_version/ztxx_invoice_join_sink.sql"
-
+            "sql_simple_version/ztxx_sink.sql"
     };
 
     public static void main(String[] args) {
@@ -53,9 +51,9 @@ public class TestCDCSQLShardingJoinTest {
         tEnv.executeSql("INSERT INTO ztxx_invoice_join_print_table " +
                 "SELECT a.id,a.ztid,a.fpid,a.fpmc,b.ztmc,a.database_name,a.table_name FROM invoice a left join ztxx b on a.ztid = b.ztid"
         );
-        // 3. 插入到mysql  输出表
-        tEnv.executeSql("INSERT INTO ztxx_invoice_join_sink " +
-                "SELECT a.database_name,a.table_name,a.id,a.ztid,a.fpid,a.fpmc,b.ztmc FROM invoice a left join ztxx b on a.ztid = b.ztid"
-        );
+//        // 3. 插入到mysql  输出表
+//        tEnv.executeSql("INSERT INTO ztxx_sink " +
+//                "SELECT database_name,table_name,id,ztid,ztmc FROM ztxx a0"
+//        );
     }
 }
