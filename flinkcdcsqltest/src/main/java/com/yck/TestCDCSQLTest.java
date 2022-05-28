@@ -12,12 +12,12 @@ public class TestCDCSQLTest {
     private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQLTest.class);
     private static final String[] DDL_PATH = {
             // 4个分库分表
-            "sql/table.sql",
-            "sql/table_a_1.sql",
-            "sql/table_a_2.sql",
-            "sql/table_a_3.sql",
+            "sql_demo_version/table.sql",
+            "sql_demo_version/table_a_1.sql",
+            "sql_demo_version/table_a_2.sql",
+            "sql_demo_version/table_a_3.sql",
             // 结果表
-            "sql/table_a_sum.sql"
+            "sql_demo_version/table_a_sum.sql"
     };
 
 
