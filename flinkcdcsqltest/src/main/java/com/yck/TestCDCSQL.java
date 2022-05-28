@@ -13,6 +13,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.yck.FlinkTableTools.getTableDDL;
+
 public class TestCDCSQL {
     private static final Logger LOG = LoggerFactory.getLogger(TestCDCSQL.class);
     private static final String[] DDL_PATH = {
@@ -25,16 +27,7 @@ public class TestCDCSQL {
             "sql/table_a_sum.sql"
     };
 
-    public static String getTableSql(String path){
-        String strings = "";
-        URL url = Resources.getResource(path);
-        try {
-            strings = Resources.toString(url, Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return strings;
-    }
+
     public static void main(String[] args) {
         LOG.debug("Start");
         EnvironmentSettings settings = EnvironmentSettings
@@ -49,7 +42,7 @@ public class TestCDCSQL {
         configuration.setString("execution.checkpointing.interval", "3 s");
         // 1. 将分库分表的4张mysql表映射到flink的元数据中
         for (String path : DDL_PATH) {
-            tEnv.executeSql(getTableSql(path));
+            tEnv.executeSql(getTableDDL(path));
         }
         // 2. union all 合并到 结果表，保存到mysql
         tEnv.executeSql("INSERT INTO table_a_sum " +
