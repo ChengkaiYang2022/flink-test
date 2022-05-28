@@ -27,4 +27,4 @@ server-id=1
 ```
 
 主方法：
-src/main/java/com/yck/TestCDCSQL.java
+src/main/java/com/yck/TestCDCSQLShardingTest.java
