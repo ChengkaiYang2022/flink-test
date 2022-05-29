@@ -1,6 +1,6 @@
 初步测试 Flink 支持分库分表合并到一张表内。
 
-运行效果图：
+## 运行效果图：
 
 四个mysql的分库分表数据如下：
 ![](img/sql_table_a_1.png)
@@ -18,10 +18,10 @@
 
 ![](img/sql_table_a_curd.png)
 
-其他
-1. Mysql测试数据在 mysql 文件下
-2. Mysql的/etc/my.cnf
-需要增加如下配置
+## Step1. 准备Mysql测试数据
+1. 开启 Mysql（5.7） 的 binlog 日志
+
+在文件 /etc/my.cnf 增加如下配置
 ```text
 [mysqld]
 #
@@ -35,14 +35,17 @@ server-id=1
 
 
 ```
+2. 运行建表语句
+建表语句与数据在 mysql 文件下。
 
-主方法：
-src/main/java/com/yck/TestCDCSQLShardingTest.java
-主要的jar包 
-flink-sql-connector-mysql-cdc-2.x.jar
-还没有发布到maven仓库中，可下载jar包，放入 Idea 的依赖中。
+## Step2. 在 Idea 中启动 flink 作业。
+
+
+1. 添加 jar 包。
+目前 flink-sql-connector-mysql-cdc-2.x.jar 还没有发布到maven仓库中，
+可手动下载[jar包](https://ververica.github.io/flink-cdc-connectors/master/content/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/mysql-postgres-tutorial-zh.html#flink)，放入 Idea 的依赖中，如下图。
 
 ![](img/jar_idea.png)
 
-flink-sql-connector-mysql-cdc-2.3-SNAPSHOT.jar
-https://ververica.github.io/flink-cdc-connectors/master/content/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/mysql-postgres-tutorial-zh.html#flink
+2. 启动 flink 作业
+可参考 src/main/java/com/yck/TestCDCSQLShardingTest.java
