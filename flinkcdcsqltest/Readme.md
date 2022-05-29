@@ -1,13 +1,23 @@
 初步测试 Flink 支持分库分表合并到一张表内。
 
 运行效果图：
+
 四个mysql的分库分表数据如下：
-![](img/sql_table_a_1.png)![](img/sql_table_a_2.png)![](img/sql_table_a.png)![](img/sql_table_a_3.png)
+![](img/sql_table_a_1.png)
+![](img/sql_table_a_2.png)
+![](img/sql_table_a.png)
+![](img/sql_table_a_3.png)
+
 写入同一张表如下：
+
 ![](img/sql_table_a_sum.png)
-同时，命令行CURD行为如下：
+
+同时，标准输出捕获的CURD日志如下：
+
 ![](img/print_table_a_sum.png)
+
 ![](img/sql_table_a_curd.png)
+
 其他
 1. Mysql测试数据在 mysql 文件下
 2. Mysql的/etc/my.cnf
