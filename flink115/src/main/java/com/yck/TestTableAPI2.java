@@ -38,17 +38,17 @@ public class TestTableAPI2 {
         tableEnv.createTemporaryTable("SourceTable", sourceDescriptor);
 // Create a sink table (using SQL DDL)SourceTable
         // WILL WORK WITH (EXCLUDING OPTIONS)
-//        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE SourceTable (EXCLUDING OPTIONS) ");
+        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'print') LIKE SourceTable (EXCLUDING OPTIONS) ");
         // WILL NOT WORK WITHOUT (EXCLUDING OPTIONS)!
-        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable ");
+//        tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable ");
 
 // Create a Table object from a Table API query
-        Table table2 = tableEnv.from("SourceTable");
+        Table table1 = tableEnv.from("SourceTable");
 
 // Create a Table object from a SQL query
-        Table table3 = tableEnv.sqlQuery("SELECT * FROM SourceTable");
+        Table table2 = tableEnv.sqlQuery("SELECT * FROM SourceTable");
 
 // Emit a Table API result Table to a TableSink, same for SQL result
-        TableResult tableResult = table2.executeInsert("SinkTable");
+        TableResult tableResult = table1.executeInsert("SinkTable");
     }
 }

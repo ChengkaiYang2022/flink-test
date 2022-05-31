@@ -40,12 +40,12 @@ public class TestTableAPI {
         tableEnv.executeSql("CREATE TEMPORARY TABLE SinkTable WITH ('connector' = 'blackhole') LIKE SourceTable ");
 
 // Create a Table object from a Table API query
-        Table table2 = tableEnv.from("SourceTable");
+        Table table1 = tableEnv.from("SourceTable");
 
 // Create a Table object from a SQL query
-        Table table3 = tableEnv.sqlQuery("SELECT * FROM SourceTable");
+        Table table2 = tableEnv.sqlQuery("SELECT * FROM SourceTable");
 
 // Emit a Table API result Table to a TableSink, same for SQL result
-        TableResult tableResult = table2.insertInto("SinkTable").execute();
+        TableResult tableResult = table1.insertInto("SinkTable").execute();
     }
 }
