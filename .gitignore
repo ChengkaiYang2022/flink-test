@@ -4,3 +4,4 @@
 /flink114/target/
 /flinkcdcsqltest/target/
 /flinkcdcsqltest/dependency-reduced-pom.xml
+/flink-sql-connector-mysocket/target/
