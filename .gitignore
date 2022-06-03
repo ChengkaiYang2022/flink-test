@@ -5,3 +5,4 @@
 /flinkcdcsqltest/target/
 /flinkcdcsqltest/dependency-reduced-pom.xml
 /flink-sql-connector-mysocket/target/
+/flink-sql-connector-http-restful/target/

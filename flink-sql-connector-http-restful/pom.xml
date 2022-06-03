@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>flink-sql-connector-mysocket</artifactId>
+    <artifactId>flink-sql-connector-http-restful</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,6 +19,11 @@
 
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-java</artifactId>
