@@ -14,3 +14,4 @@
 # limitations under the License.
 
 org.apache.flink.connector.socket2.SocketDynamicTableFactoryV2
+org.apache.flink.connector.socket2.ChangelogCsvFormatFactoryV2

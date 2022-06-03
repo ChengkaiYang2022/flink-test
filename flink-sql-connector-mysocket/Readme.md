@@ -4,7 +4,7 @@ WITH (
 'hostname' = 'localhost',
 'port' = '9999',
 'byte-delimiter' = '10',
-'format' = 'changelog-csv',
-'changelog-csv.column-delimiter' = '|'
+'format' = 'changelog-csv-v2',
+'changelog-csv-v2.column-delimiter' = '|'
 );
 select * from UserScores;
