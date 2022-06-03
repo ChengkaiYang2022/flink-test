@@ -20,6 +20,13 @@ WITH (
 
 select * from UserScores;
 ```
+```shell
+
+> nc -lk 9999
+INSERT|Alice|12
+INSERT|Bob|5
+DELETE|Alice|12
+```
 5. If You don't miss anything, you will see the following result like the below image:
 ![](img/result.png)
 

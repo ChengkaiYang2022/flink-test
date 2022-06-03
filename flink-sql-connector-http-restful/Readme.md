@@ -3,11 +3,10 @@
 CREATE TABLE UserScores (name STRING, score INT)
 WITH (
 'connector' = 'restful',
-'url' = 'localhost',
-'method' = 'POST',
-'format' = 'changelog-json',
-#'changelog-json.column-delimiter' = '|'
-#'check-mode' = 'non-strict'
+'path' = '/flink/table1',
+'port' = '8081',
+'format' = 'changelog-csv-v3',
+'changelog-csv-v3.column-delimiter' = '|'
 );
 
 select * from UserScores;
