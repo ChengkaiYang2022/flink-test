@@ -93,7 +93,7 @@ public final class ChangelogSocketExampleV2 {
                         + ")");
 
         // define a dynamic aggregating query
-        final Table result = tEnv.sqlQuery("SELECT name, SUM(score) FROM UserScores GROUP BY name");
+        final Table result = tEnv.sqlQuery("SELECT name, score FROM UserScores");
 
         // print the result to the console
         tEnv.toChangelogStream(result).print();
