@@ -24,6 +24,6 @@ select * from UserScores;
 ![](img/result.png)
 
 ## Run in the IDEA
-1. Run the class `src/main/java/org/apache/flink/connector/socket2/ChangelogSocketExampleV2.java`, remember add `Add dependencies with 'provided' scope to classpath` in your IDEA.
+1. Run the class `src/main/java/com/github/yck/connector/socket2/ChangelogSocketExampleV2.java`, remember add `Add dependencies with 'provided' scope to classpath` in your IDEA.
 2. If You don't miss anything, you will see the following result like the below image:
 ![](img/result_in_idea.png)
