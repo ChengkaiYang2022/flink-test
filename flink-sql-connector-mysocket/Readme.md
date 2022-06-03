@@ -1,3 +1,13 @@
+# flink-sql-connector-mysocket
+Copy socket connector sql from Apache Flink [code](https://github.com/apache/flink/blob/master/flink-examples/flink-examples-table/src/main/java/org/apache/flink/table/examples/java/connectors/SocketDynamicTableFactory.java).
+For more details take a look at [Full Stack Example](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sourcessinks/#full-stack-example)
+
+## Run in Flink SQL SHELL
+1. Copy the flink-sql-connector-mysocket-1.0-SNAPSHOT.jar to the `lib/` of flink.
+2. Start the flink standalone cluster by using command `./bin/start-cluster.sh`.
+3. Open Flink SQL SHELL by using command `./bin/sql-client.sh`
+4. Copy the code below to your Flink SQL Shell. For more details please see the [official Flink documentation](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sourcessinks/#full-stack-example)
+```shell
 CREATE TABLE UserScores (name STRING, score INT)
 WITH (
 'connector' = 'socketv2',
@@ -7,4 +17,6 @@ WITH (
 'format' = 'changelog-csv-v2',
 'changelog-csv-v2.column-delimiter' = '|'
 );
+
 select * from UserScores;
+```
