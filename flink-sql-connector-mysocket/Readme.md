@@ -20,3 +20,5 @@ WITH (
 
 select * from UserScores;
 ```
+5. If You don't miss anything, you will see the result as the below image:
+![](img/result.png)
