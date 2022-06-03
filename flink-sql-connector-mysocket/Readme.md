@@ -1,6 +1,6 @@
 # flink-sql-connector-mysocket
 Copy socket connector sql from Apache Flink [code](https://github.com/apache/flink/blob/master/flink-examples/flink-examples-table/src/main/java/org/apache/flink/table/examples/java/connectors/SocketDynamicTableFactory.java).
-For more details take a look at [Full Stack Example](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sourcessinks/#full-stack-example)
+For more details please take a look at [Full Stack Example](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sourcessinks/#full-stack-example)
 
 ## Run in Flink SQL SHELL
 1. Copy the flink-sql-connector-mysocket-1.0-SNAPSHOT.jar to the `lib/` of flink.
@@ -20,5 +20,10 @@ WITH (
 
 select * from UserScores;
 ```
-5. If You don't miss anything, you will see the result as the below image:
+5. If You don't miss anything, you will see the following result like the below image:
 ![](img/result.png)
+
+## Run in the IDEA
+1. Run the class `src/main/java/org/apache/flink/connector/socket2/ChangelogSocketExampleV2.java`, remember add `Add dependencies with 'provided' scope to classpath` in your IDEA.
+2. If You don't miss anything, you will see the following result like the below image:
+![](img/result_in_idea.png)
