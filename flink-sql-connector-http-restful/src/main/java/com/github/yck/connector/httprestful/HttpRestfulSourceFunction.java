@@ -12,6 +12,7 @@ import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.apache.flink.table.data.RowData;
+import org.apache.flink.types.RowKind;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,8 +69,12 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                             he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING.length());
                             os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING), "UTF-8"));
                             byte[] bytes = IOUtils.toByteArray(is);
-                            ctx.collect(deserializer.deserialize(bytes));
-
+                            // TODO bytes -> json -> RowData cause json format is so much better than csv
+                            RowData rowData = deserializer.deserialize(bytes);
+                            // TODO set Row KIND accounting to the restful type.
+//                            rowData.setRowKind(RowKind.INSERT);
+                            // TODO should support collect a list of rowData here.
+                            ctx.collect(rowData);
                         } catch (Exception e) {
                             System.err.println(e);
                         }finally {
