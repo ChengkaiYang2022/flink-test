@@ -72,7 +72,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                             // TODO bytes -> json -> RowData cause json format is so much better than csv
                             RowData rowData = deserializer.deserialize(bytes);
                             // TODO set Row KIND accounting to the restful type.
-//                            rowData.setRowKind(RowKind.INSERT);
+                            rowData.setRowKind(RowKind.INSERT);
                             // TODO should support collect a list of rowData here.
                             ctx.collect(rowData);
                         } catch (Exception e) {

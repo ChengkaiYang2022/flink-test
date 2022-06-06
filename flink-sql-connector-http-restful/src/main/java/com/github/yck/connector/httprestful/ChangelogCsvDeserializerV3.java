@@ -20,6 +20,7 @@ package com.github.yck.connector.httprestful;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.table.connector.RuntimeConverter.Context;
 import org.apache.flink.table.connector.source.DynamicTableSource.DataStructureConverter;
 import org.apache.flink.table.data.RowData;
@@ -27,8 +28,12 @@ import org.apache.flink.table.types.logical.LogicalType;
 import org.apache.flink.table.types.logical.LogicalTypeRoot;
 import org.apache.flink.types.Row;
 import org.apache.flink.types.RowKind;
+import org.apache.flink.util.Collector;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -43,6 +48,8 @@ public final class ChangelogCsvDeserializerV3 implements DeserializationSchema<R
     private final DataStructureConverter converter;
     private final TypeInformation<RowData> producedTypeInfo;
     private final String columnDelimiter;
+    /** Object mapper for parsing the JSON. */
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ChangelogCsvDeserializerV3(
             List<LogicalType> parsingTypes,
@@ -67,15 +74,37 @@ public final class ChangelogCsvDeserializerV3 implements DeserializationSchema<R
         converter.open(Context.create(ChangelogCsvDeserializerV3.class.getClassLoader()));
     }
 
+    /**
+     * TODO using deserialize to decode json list and collect row data iterable
+     * @param message
+     * @param out
+     * @throws IOException
+     */
+    @Override
+    public void deserialize(byte[] message, Collector<RowData> out) throws IOException {
+        DeserializationSchema.super.deserialize(message, out);
+    }
+
+    /**
+     * Decode simple json (not a json list) and return row data.
+     * @param message
+     * @return
+     */
     @Override
     public RowData deserialize(byte[] message) {
         // parse the columns including a changelog flag
-        final String[] columns = new String(message).split(Pattern.quote(columnDelimiter));
-        final RowKind kind = RowKind.valueOf(columns[0]);
-        final Row row = new Row(kind, parsingTypes.size());
-        for (int i = 0; i < parsingTypes.size(); i++) {
-            row.setField(i, parse(parsingTypes.get(i).getTypeRoot(), columns[i + 1]));
+        Map<String,Object> word = new HashMap<>();
+        Row row = Row.withNames();
+
+        try {
+            word = objectMapper.readValue(message, Map.class);
+            for (String s : word.keySet()) {
+                row.setField(s,word.get(s));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         // convert to internal data structure
         return (RowData) converter.toInternal(row);
     }
