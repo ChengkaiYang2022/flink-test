@@ -10,7 +10,9 @@ import org.apache.flink.api.common.serialization.RuntimeContextInitializationCon
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.connector.datagen.table.types.RowDataGenerator;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
+import org.apache.flink.table.data.GenericRowData;
 import org.apache.flink.table.data.RowData;
 import org.apache.flink.types.RowKind;
 
@@ -20,6 +22,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
         implements ResultTypeQueryable<RowData> {
@@ -28,7 +32,8 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
     private Integer port;
     private final byte byteDelimiter;
     private final DeserializationSchema<RowData> deserializer;
-    private static final String RESPONSE_STRING = "{\"code\": 200,\"message\":\"success\"}";
+    private static final String RESPONSE_STRING_200 = "{\"code\": 200,\"message\":\"success\"}";
+    private static final String RESPONSE_STRING_405 = "{\"code\": 405,\"message\":\"Not support this method."+"\"}";
 
     private volatile boolean isRunning = true;
     @Override
@@ -43,7 +48,11 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
         this.byteDelimiter = byteDelimiter;
         this.deserializer = deserializer;
     }
-
+    private static final String METHOD_POST = "POST";
+    private static final String METHOD_DELETE = "DELETE";
+    private static final Set<String> METHOD_SET = new HashSet<String>(){{
+        add(METHOD_POST);add(METHOD_DELETE);
+    }};
     @Override
     public TypeInformation<RowData> getProducedType() {
         return deserializer.getProducedType();
@@ -61,26 +70,36 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
             currentHttpServer.createContext(this.path,new HttpHandler(){
                 @Override
                 public void handle(HttpExchange he) throws IOException {
-                    if (he.getRequestMethod().equalsIgnoreCase("POST")) {
                         try {
+                            String method = he.getRequestMethod().toUpperCase().intern();
+
                             InputStream is = he.getRequestBody();
-//                            System.out.println(IOUtils.toString(is));
                             OutputStream os = he.getResponseBody();
-                            he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING.length());
-                            os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING), "UTF-8"));
                             byte[] bytes = IOUtils.toByteArray(is);
-                            // TODO bytes -> json -> RowData cause json format is so much better than csv
+                            // bytes -> json -> RowData cause json format is so much better than csv
                             RowData rowData = deserializer.deserialize(bytes);
-                            // TODO set Row KIND accounting to the restful type.
-                            rowData.setRowKind(RowKind.INSERT);
+
+                            // set Row KIND accounting to the restful type.
+                            switch (method){
+                                case METHOD_POST:rowData.setRowKind(RowKind.INSERT);break;
+                                case METHOD_DELETE:rowData.setRowKind(RowKind.DELETE);break;
+                                default:
+                                    // TODO
+                                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, RESPONSE_STRING_405.length());
+                                    os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_405), "UTF-8"));
+                                    throw new IllegalStateException("Unexpected value: " + method);
+                            }
+
                             // TODO should support collect a list of rowData here.
                             ctx.collect(rowData);
+                            he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING_200.length());
+                            os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_200), "UTF-8"));
+
                         } catch (Exception e) {
                             System.err.println(e);
                         }finally {
                             he.close();
                         }
-                    }
                 }
                 });
             currentHttpServer.setExecutor(null);
