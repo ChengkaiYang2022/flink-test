@@ -35,7 +35,7 @@ import java.util.List;
  * The {@link HttpRestfulJsonFormat} is a decoding format that uses a {@link DeserializationSchema}
  * during runtime. It supports emitting {@code INSERT} and {@code DELETE} changes.
  */
-public final class HttpRestfulJsonFormat implements DecodingFormat<DeserializationSchema<RowData>> {
+public final class HttpRestfulJsonFormat implements DecodingFormat<DeserializationRestfulSchema> {
 
     private final String columnDelimiter;
 
@@ -44,7 +44,7 @@ public final class HttpRestfulJsonFormat implements DecodingFormat<Deserializati
     }
 
     @Override
-    public DeserializationSchema<RowData> createRuntimeDecoder(
+    public DeserializationRestfulSchema createRuntimeDecoder(
             DynamicTableSource.Context context, DataType producedDataType) {
         // create type information for the DeserializationSchema
         final TypeInformation<RowData> producedTypeInfo =

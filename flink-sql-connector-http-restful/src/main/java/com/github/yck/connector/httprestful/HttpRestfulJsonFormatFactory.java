@@ -41,7 +41,7 @@ import java.util.Set;
  * <p>Because this factory implements {@link DeserializationFormatFactory}, it could also be used
  * for other connectors that support deserialization formats such as the Kafka connector.
  */
-public final class HttpRestfulJsonFormatFactory implements DeserializationFormatFactory {
+public final class HttpRestfulJsonFormatFactory implements DeserializationRestfulFormatFactory {
 
     // define all options statically
     public static final ConfigOption<String> COLUMN_DELIMITER =
@@ -65,7 +65,7 @@ public final class HttpRestfulJsonFormatFactory implements DeserializationFormat
     }
 
     @Override
-    public DecodingFormat<DeserializationSchema<RowData>> createDecodingFormat(
+    public DecodingFormat<DeserializationRestfulSchema> createDecodingFormat(
             DynamicTableFactory.Context context, ReadableConfig formatOptions) {
         // either implement your custom validation logic here ...
         // or use the provided helper method

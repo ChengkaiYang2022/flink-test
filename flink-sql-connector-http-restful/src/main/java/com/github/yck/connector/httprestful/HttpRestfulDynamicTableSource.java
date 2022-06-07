@@ -14,10 +14,10 @@ public class HttpRestfulDynamicTableSource implements ScanTableSource {
     private String path;
     private Integer port;
     private final byte byteDelimiter;
-    private final DecodingFormat<DeserializationSchema<RowData>> decodingFormat;
+    private final DecodingFormat<DeserializationRestfulSchema> decodingFormat;
     private final DataType producedDataType;
 
-    public HttpRestfulDynamicTableSource(String path, int port, byte byteDelimiter, DecodingFormat<DeserializationSchema<RowData>> decodingFormat, DataType producedDataType) {
+    public HttpRestfulDynamicTableSource(String path, int port, byte byteDelimiter, DecodingFormat<DeserializationRestfulSchema> decodingFormat, DataType producedDataType) {
         this.path = path;
         this.port = port;
         this.byteDelimiter = byteDelimiter;
@@ -34,7 +34,7 @@ public class HttpRestfulDynamicTableSource implements ScanTableSource {
     public ScanRuntimeProvider getScanRuntimeProvider(ScanContext runtimeProviderContext) {
         // create runtime classes that are shipped to the cluster
 
-        final DeserializationSchema<RowData> deserializer =
+        final DeserializationRestfulSchema deserializer =
                 decodingFormat.createRuntimeDecoder(runtimeProviderContext, producedDataType);
 
         final SourceFunction<RowData> sourceFunction =

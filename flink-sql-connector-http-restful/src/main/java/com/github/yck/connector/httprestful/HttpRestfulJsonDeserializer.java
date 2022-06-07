@@ -41,7 +41,7 @@ import java.util.Map;
  *
  * <p>The final conversion step converts those into internal data structures.
  */
-public final class HttpRestfulJsonDeserializer implements DeserializationSchema<RowData> {
+public final class HttpRestfulJsonDeserializer implements DeserializationRestfulSchema {
 
     private final List<LogicalType> parsingTypes;
     private final DataStructureConverter converter;
@@ -81,7 +81,7 @@ public final class HttpRestfulJsonDeserializer implements DeserializationSchema<
      */
     @Override
     public void deserialize(byte[] message, Collector<RowData> out) throws IOException {
-        DeserializationSchema.super.deserialize(message, out);
+        DeserializationRestfulSchema.super.deserialize(message, out);
     }
 
     /**

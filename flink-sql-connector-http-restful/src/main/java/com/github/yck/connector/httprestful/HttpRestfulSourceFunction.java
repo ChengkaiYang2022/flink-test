@@ -33,7 +33,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
     private String path;
     private Integer port;
     private final byte byteDelimiter;
-    private final DeserializationSchema<RowData> deserializer;
+    private final DeserializationRestfulSchema deserializer;
 
     private volatile boolean isRunning = true;
     @Override
@@ -42,7 +42,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                 RuntimeContextInitializationContextAdapters.deserializationAdapter(
                         getRuntimeContext()));
     }
-    public HttpRestfulSourceFunction(  String path, Integer port, byte byteDelimiter, DeserializationSchema<RowData> deserializer) {
+    public HttpRestfulSourceFunction(  String path, Integer port, byte byteDelimiter, DeserializationRestfulSchema deserializer) {
         this.path = path;
         this.port = port;
         this.byteDelimiter = byteDelimiter;
@@ -69,8 +69,8 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                 private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
                     byte[] bytes = IOUtils.toByteArray(he.getRequestBody());
                     // bytes -> json -> RowData cause json format is so much better than csv
-                    RowData rowData = deserializer.deserialize(bytes);
-                    rowData.setRowKind(rowKind);
+                    RowData rowData = deserializer.deserializeWith(bytes,rowKind);
+
                     ctx.collect(rowData);
                     String responseBody = ResultGenerator.getCodeAndResult(HttpURLConnection.HTTP_OK,"success").toString();
                     he.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());

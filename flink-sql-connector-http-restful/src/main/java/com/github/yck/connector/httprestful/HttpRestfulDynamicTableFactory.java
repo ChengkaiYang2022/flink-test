@@ -36,9 +36,9 @@ public class HttpRestfulDynamicTableFactory implements DynamicTableSourceFactory
                 FactoryUtil.createTableFactoryHelper(this, context);
 
         // discover a suitable decoding format
-        final DecodingFormat<DeserializationSchema<RowData>> decodingFormat =
+        final DecodingFormat<DeserializationRestfulSchema> decodingFormat =
                 helper.discoverDecodingFormat(
-                        DeserializationFormatFactory.class, FactoryUtil.FORMAT);
+                        DeserializationRestfulFormatFactory.class, FactoryUtil.FORMAT);
 
         // validate all options
         helper.validate();
