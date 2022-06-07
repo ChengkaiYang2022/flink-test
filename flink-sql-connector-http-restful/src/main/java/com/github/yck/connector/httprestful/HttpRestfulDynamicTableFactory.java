@@ -60,7 +60,7 @@ public class HttpRestfulDynamicTableFactory implements DynamicTableSourceFactory
 
     @Override
     public String factoryIdentifier() {
-        return "restful";
+        return "http-restful";
     }
 
     @Override

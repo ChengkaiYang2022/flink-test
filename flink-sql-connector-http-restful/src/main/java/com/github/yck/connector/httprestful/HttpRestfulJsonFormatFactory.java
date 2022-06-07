@@ -49,7 +49,7 @@ public final class HttpRestfulJsonFormatFactory implements DeserializationFormat
 
     @Override
     public String factoryIdentifier() {
-        return "restful-json";
+        return "http-restful-json";
     }
 
     @Override

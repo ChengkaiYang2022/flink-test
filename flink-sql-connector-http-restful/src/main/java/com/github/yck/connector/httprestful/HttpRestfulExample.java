@@ -79,10 +79,10 @@ public final class HttpRestfulExample {
         // register a table in the catalog
         tEnv.executeSql("CREATE TABLE UserScores (name STRING, score INT)\n" +
                 "WITH (\n" +
-                "'connector' = 'restful',\n" +
+                "'connector' = 'http-restful',\n" +
                 "'path' = '/flink/table1',\n" +
                 "'port' = '8080',\n" +
-                "'format' = 'restful-json'\n" +
+                "'format' = 'http-restful-json'\n" +
                 ");\n");
 
         // define a dynamic aggregating query
