@@ -1,5 +1,7 @@
 package com.github.yck.connector.httprestful;
 
+import com.github.yck.connector.util.Result;
+import com.github.yck.connector.util.ResultGenerator;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -32,8 +34,6 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
     private Integer port;
     private final byte byteDelimiter;
     private final DeserializationSchema<RowData> deserializer;
-    private static final String RESPONSE_STRING_200 = "{\"code\": 200,\"message\":\"success\"}";
-    private static final String RESPONSE_STRING_405 = "{\"code\": 405,\"message\":\"Not support this method."+"\"}";
 
     private volatile boolean isRunning = true;
     @Override
@@ -50,9 +50,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
     }
     private static final String METHOD_POST = "POST";
     private static final String METHOD_DELETE = "DELETE";
-    private static final Set<String> METHOD_SET = new HashSet<String>(){{
-        add(METHOD_POST);add(METHOD_DELETE);
-    }};
+
     @Override
     public TypeInformation<RowData> getProducedType() {
         return deserializer.getProducedType();
@@ -74,13 +72,14 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                     RowData rowData = deserializer.deserialize(bytes);
                     rowData.setRowKind(rowKind);
                     ctx.collect(rowData);
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING_200.length());
-                    he.getResponseBody().write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_200), "UTF-8"));
+                    String responseBody = ResultGenerator.getCodeAndResult(HttpURLConnection.HTTP_OK,"success").toString();
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());
+                    he.getResponseBody().write(IOUtils.toByteArray(new StringReader(responseBody), "UTF-8"));
                 }
-                private void responseToClientAndRejectData(HttpExchange he) throws IOException {
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, RESPONSE_STRING_405.length());
-                    OutputStream os = he.getResponseBody();
-                    os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_405), "UTF-8"));
+                private void responseToClientAndRejectData(HttpExchange he, String message) throws IOException {
+                    String responseBody = ResultGenerator.getCodeAndResult(HttpURLConnection.HTTP_BAD_METHOD,message).toString();
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, responseBody.length());
+                    he.getResponseBody().write(IOUtils.toByteArray(new StringReader(responseBody), "UTF-8"));
 
                 }
                 @Override
@@ -101,7 +100,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                             }
 
                         } catch (Exception e) {
-                            responseToClientAndRejectData(he);
+                            responseToClientAndRejectData(he,e.getLocalizedMessage());
                             System.err.println(e);
                         }finally {
                             he.close();
