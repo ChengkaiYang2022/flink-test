@@ -57,7 +57,6 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
     public TypeInformation<RowData> getProducedType() {
         return deserializer.getProducedType();
     }
-
     @Override
     public void run(SourceContext<RowData> ctx) throws Exception {
         while (isRunning){
@@ -67,35 +66,42 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                 continue;
             }
             currentHttpServer = HttpServer.create(new InetSocketAddress(this.port), 0);
+
             currentHttpServer.createContext(this.path,new HttpHandler(){
+                private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
+                    byte[] bytes = IOUtils.toByteArray(he.getRequestBody());
+                    // bytes -> json -> RowData cause json format is so much better than csv
+                    RowData rowData = deserializer.deserialize(bytes);
+                    rowData.setRowKind(rowKind);
+                    ctx.collect(rowData);
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING_200.length());
+                    he.getResponseBody().write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_200), "UTF-8"));
+                }
+                private void responseToClientAndRejectData(HttpExchange he) throws IOException {
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, RESPONSE_STRING_405.length());
+                    OutputStream os = he.getResponseBody();
+                    os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_405), "UTF-8"));
+
+                }
                 @Override
                 public void handle(HttpExchange he) throws IOException {
                         try {
                             String method = he.getRequestMethod().toUpperCase().intern();
 
-                            InputStream is = he.getRequestBody();
-                            OutputStream os = he.getResponseBody();
-                            byte[] bytes = IOUtils.toByteArray(is);
-                            // bytes -> json -> RowData cause json format is so much better than csv
-                            RowData rowData = deserializer.deserialize(bytes);
-
                             // set Row KIND accounting to the restful type.
                             switch (method){
-                                case METHOD_POST:rowData.setRowKind(RowKind.INSERT);break;
-                                case METHOD_DELETE:rowData.setRowKind(RowKind.DELETE);break;
+                                case METHOD_POST:
+                                    responseToClientAndAcceptData(he, RowKind.INSERT);
+                                    break;
+                                case METHOD_DELETE:
+                                    responseToClientAndAcceptData(he, RowKind.DELETE);
+                                    break;
                                 default:
-                                    // TODO
-                                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, RESPONSE_STRING_405.length());
-                                    os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_405), "UTF-8"));
                                     throw new IllegalStateException("Unexpected value: " + method);
                             }
 
-                            // TODO should support collect a list of rowData here.
-                            ctx.collect(rowData);
-                            he.sendResponseHeaders(HttpURLConnection.HTTP_OK, RESPONSE_STRING_200.length());
-                            os.write(IOUtils.toByteArray(new StringReader(RESPONSE_STRING_200), "UTF-8"));
-
                         } catch (Exception e) {
+                            responseToClientAndRejectData(he);
                             System.err.println(e);
                         }finally {
                             he.close();
