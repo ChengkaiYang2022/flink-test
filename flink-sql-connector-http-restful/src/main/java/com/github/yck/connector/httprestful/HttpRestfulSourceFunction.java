@@ -69,8 +69,7 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
                 private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
                     byte[] bytes = IOUtils.toByteArray(he.getRequestBody());
                     // bytes -> json -> RowData cause json format is so much better than csv
-                    RowData rowData = deserializer.deserializeWith(bytes,rowKind);
-
+                    RowData rowData = deserializer.deserializeSingleJsonStringWithRowKind(bytes, rowKind);
                     ctx.collect(rowData);
                     String responseBody = ResultGenerator.getCodeAndResult(HttpURLConnection.HTTP_OK,"success").toString();
                     he.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());

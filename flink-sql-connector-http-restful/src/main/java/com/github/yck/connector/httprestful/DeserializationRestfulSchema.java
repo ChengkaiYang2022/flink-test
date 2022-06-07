@@ -7,9 +7,5 @@ import org.apache.flink.types.RowKind;
 import java.io.IOException;
 
 public interface DeserializationRestfulSchema extends DeserializationSchema<RowData> {
-    public default RowData deserializeWith(byte[] message, RowKind rowKind) throws IOException {
-        RowData rowData = this.deserialize(message);
-        rowData.setRowKind(rowKind);
-        return rowData;
-    }
+    RowData deserializeSingleJsonStringWithRowKind(byte[] message, RowKind rowKind) throws IOException;
 }

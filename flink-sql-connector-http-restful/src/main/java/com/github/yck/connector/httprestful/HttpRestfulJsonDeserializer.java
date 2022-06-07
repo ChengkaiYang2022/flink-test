@@ -123,4 +123,11 @@ public final class HttpRestfulJsonDeserializer implements DeserializationRestful
     public boolean isEndOfStream(RowData nextElement) {
         return false;
     }
+
+    @Override
+    public RowData deserializeSingleJsonStringWithRowKind(byte[] message, RowKind rowKind) throws IOException {
+        RowData rowData = this.deserialize(message);
+        rowData.setRowKind(rowKind);
+        return rowData;
+    }
 }
