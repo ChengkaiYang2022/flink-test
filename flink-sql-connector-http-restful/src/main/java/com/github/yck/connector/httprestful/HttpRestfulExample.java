@@ -27,42 +27,6 @@ import org.apache.flink.table.connector.format.DecodingFormat;
 import org.apache.flink.table.connector.source.DynamicTableSource;
 import org.apache.flink.table.factories.FactoryUtil;
 
-/**
- * Example for implementing a custom {@link DynamicTableSource} and a {@link DecodingFormat}.
- *
- * <p>The example implements a table source with a decoding format that supports changelog
- * semantics.
- *
- * <p>The {@link } illustrates how connector components play together. It
- * can serve as a reference implementation for implementing own connectors and/or formats.
- *
- * <p>The {@link } uses a simple single-threaded {@link SourceFunction} to
- * open a socket that listens for incoming bytes. The raw bytes are decoded into rows by a pluggable
- * format. The format expects a changelog flag as the first column.
- *
- * <p>In particular, the example shows how to
- *
- * <ul>
- *   <li>create factories that parse and validate options,
- *   <li>implement table connectors,
- *   <li>implement and discover custom formats,
- *   <li>and use provided utilities such as data structure converters and the {@link FactoryUtil}.
- * </ul>
- *
- * <p>Usage: <code>ChangelogSocketExample --hostname &lt;localhost&gt; --port &lt;9999&gt;</code>
- *
- * <p>Use the following command to ingest data in a terminal:
- *
- * <pre>
- *     nc -lk 9999
- *     INSERT|Alice|12
- *     INSERT|Bob|5
- *     DELETE|Alice|12
- *     INSERT|Alice|18
- * </pre>
- *
- * <p>The result is written to stdout.
- */
 public final class HttpRestfulExample {
 
     public static void main(String[] args) throws Exception {
@@ -72,7 +36,7 @@ public final class HttpRestfulExample {
         final String port = params.get("port", "8081");
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1); // source only supports parallelism of 1
+        env.setParallelism(1);
 
         final StreamTableEnvironment tEnv = StreamTableEnvironment.create(env);
 
