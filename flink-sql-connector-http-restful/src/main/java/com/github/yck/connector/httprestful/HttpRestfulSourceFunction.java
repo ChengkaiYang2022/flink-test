@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
@@ -67,8 +68,12 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
 
             currentHttpServer.createContext(this.path,new HttpHandler(){
                 private void deserializeAndCollectData(byte[] bytes,RowKind rowKind) throws IOException {
-                    RowData  rowData = deserializer.deserializeSingleJsonStringWithRowKind(bytes, rowKind);
-                    ctx.collect(rowData);
+//                    RowData  rowData = deserializer.deserializeSingleJsonStringWithRowKind(bytes, rowKind);
+//                    ctx.collect(rowData);
+                    List<RowData> rowDataList = deserializer.deserializeJsonListWithRowKind(bytes, rowKind);
+                    for (RowData data : rowDataList) {
+                        ctx.collect(data);
+                    }
                 }
                 private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
                     // bytes -> json -> RowData cause json format is so much better than csv

@@ -129,8 +129,21 @@ public final class HttpRestfulJsonDeserializer implements DeserializationRestful
     }
 
     @Override
-    public List<RowData> deserializeJsonListWithRowKind(byte[] message, RowKind rowKind) {
-        List<RowData> t = new ArrayList<>();
-        return t;
+    public List<RowData> deserializeJsonListWithRowKind(byte[] message, RowKind rowKind) throws IOException {
+        // parse the columns including a changelog flag
+        List<Map<String,Object>> jsonList = new ArrayList<>();
+        List<RowData> re = new ArrayList<>();
+
+        jsonList = objectMapper.readValue(message, List.class);
+        for (Map<String,Object> json : jsonList) {
+            Row row = Row.withNames();
+            for (String s : json.keySet()) {
+                row.setField(s,json.get(s));
+            }
+            row.setKind(rowKind);
+            re.add((RowData) converter.toInternal(row));
+        }
+        return re;
+
     }
 }
