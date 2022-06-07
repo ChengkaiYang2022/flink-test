@@ -86,8 +86,8 @@ public final class HttpRestfulExample {
                 ");\n");
 
         // define a dynamic aggregating query
-        final Table result = tEnv.sqlQuery("SELECT name, sum(score) " +
-                "FROM UserScores group by name");
+        final Table result = tEnv.sqlQuery("SELECT name, score " +
+                "FROM UserScores");
 
         // print the result to the console
         tEnv.toChangelogStream(result).print();
