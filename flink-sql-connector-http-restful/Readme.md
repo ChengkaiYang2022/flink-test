@@ -5,8 +5,7 @@ WITH (
 'connector' = 'restful',
 'path' = '/flink/table1',
 'port' = '8081',
-'format' = 'changelog-csv-v3',
-'changelog-csv-v3.column-delimiter' = '|'
+'format' = 'restful-json'
 );
 
 select * from UserScores;

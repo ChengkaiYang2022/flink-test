@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The {@link ChangelogCsvFormatFactoryV3} translates format-specific options to a format.
+ * The {@link HttpRestfulJsonFormatFactory} translates format-specific options to a format.
  *
  * <p>The {@link FactoryUtil} in {@link SocketDynamicTableFactory} takes care of adapting the option
  * keys accordingly and handles the prefixing like {@code changelog-csv.column-delimiter}.
@@ -41,7 +41,7 @@ import java.util.Set;
  * <p>Because this factory implements {@link DeserializationFormatFactory}, it could also be used
  * for other connectors that support deserialization formats such as the Kafka connector.
  */
-public final class ChangelogCsvFormatFactoryV3 implements DeserializationFormatFactory {
+public final class HttpRestfulJsonFormatFactory implements DeserializationFormatFactory {
 
     // define all options statically
     public static final ConfigOption<String> COLUMN_DELIMITER =
@@ -49,7 +49,7 @@ public final class ChangelogCsvFormatFactoryV3 implements DeserializationFormatF
 
     @Override
     public String factoryIdentifier() {
-        return "changelog-csv-v3";
+        return "restful-json";
     }
 
     @Override
@@ -75,6 +75,6 @@ public final class ChangelogCsvFormatFactoryV3 implements DeserializationFormatF
         final String columnDelimiter = formatOptions.get(COLUMN_DELIMITER);
 
         // create and return the format
-        return new ChangelogCsvFormatV3(columnDelimiter);
+        return new HttpRestfulJsonFormat(columnDelimiter);
     }
 }

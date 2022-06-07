@@ -34,15 +34,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
- * The {@link ChangelogCsvDeserializerV3} contains a simple parsing logic for converting bytes into
+ * The {@link HttpRestfulJsonDeserializer} contains a simple parsing logic for converting bytes into
  * {@link Row} of {@link Integer} and {@link String} with a {@link RowKind}.
  *
  * <p>The final conversion step converts those into internal data structures.
  */
-public final class ChangelogCsvDeserializerV3 implements DeserializationSchema<RowData> {
+public final class HttpRestfulJsonDeserializer implements DeserializationSchema<RowData> {
 
     private final List<LogicalType> parsingTypes;
     private final DataStructureConverter converter;
@@ -51,7 +50,7 @@ public final class ChangelogCsvDeserializerV3 implements DeserializationSchema<R
     /** Object mapper for parsing the JSON. */
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public ChangelogCsvDeserializerV3(
+    public HttpRestfulJsonDeserializer(
             List<LogicalType> parsingTypes,
             DataStructureConverter converter,
             TypeInformation<RowData> producedTypeInfo,
@@ -71,7 +70,7 @@ public final class ChangelogCsvDeserializerV3 implements DeserializationSchema<R
     @Override
     public void open(InitializationContext context) {
         // converters must be opened
-        converter.open(Context.create(ChangelogCsvDeserializerV3.class.getClassLoader()));
+        converter.open(Context.create(HttpRestfulJsonDeserializer.class.getClassLoader()));
     }
 
     /**

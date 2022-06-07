@@ -63,7 +63,7 @@ import org.apache.flink.table.factories.FactoryUtil;
  *
  * <p>The result is written to stdout.
  */
-public final class ChangelogHttpRestfulExampleV3 {
+public final class HttpRestfulExample {
 
     public static void main(String[] args) throws Exception {
         final ParameterTool params = ParameterTool.fromArgs(args);
@@ -82,8 +82,7 @@ public final class ChangelogHttpRestfulExampleV3 {
                 "'connector' = 'restful',\n" +
                 "'path' = '/flink/table1',\n" +
                 "'port' = '8080',\n" +
-                "'format' = 'changelog-csv-v3',\n" +
-                "'changelog-csv-v3.column-delimiter' = '|'\n" +
+                "'format' = 'restful-json'\n" +
                 ");\n");
 
         // define a dynamic aggregating query

@@ -32,14 +32,14 @@ import org.apache.flink.types.RowKind;
 import java.util.List;
 
 /**
- * The {@link ChangelogCsvFormatV3} is a decoding format that uses a {@link DeserializationSchema}
+ * The {@link HttpRestfulJsonFormat} is a decoding format that uses a {@link DeserializationSchema}
  * during runtime. It supports emitting {@code INSERT} and {@code DELETE} changes.
  */
-public final class ChangelogCsvFormatV3 implements DecodingFormat<DeserializationSchema<RowData>> {
+public final class HttpRestfulJsonFormat implements DecodingFormat<DeserializationSchema<RowData>> {
 
     private final String columnDelimiter;
 
-    public ChangelogCsvFormatV3(String columnDelimiter) {
+    public HttpRestfulJsonFormat(String columnDelimiter) {
         this.columnDelimiter = columnDelimiter;
     }
 
@@ -59,7 +59,7 @@ public final class ChangelogCsvFormatV3 implements DecodingFormat<Deserializatio
         final List<LogicalType> parsingTypes = producedDataType.getLogicalType().getChildren();
 
         // create runtime class
-        return new ChangelogCsvDeserializerV3(
+        return new HttpRestfulJsonDeserializer(
                 parsingTypes, converter, producedTypeInfo, columnDelimiter);
     }
 
