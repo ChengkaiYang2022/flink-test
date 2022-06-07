@@ -8,7 +8,7 @@ For more details please take a look at [Full Stack Example](https://nightlies.ap
 3. Open Flink SQL SHELL by using command `./bin/sql-client.sh`
 4. Copy the code below to your Flink SQL Shell. For more details please see the [official Flink documentation](https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/sourcessinks/#full-stack-example)
 ```shell
-CREATE TABLE UserScores (name STRING, score INT)
+CREATE TABLE UserScores2 (name STRING, score INT)
 WITH (
 'connector' = 'socketv2',
 'hostname' = 'localhost',
@@ -18,7 +18,7 @@ WITH (
 'changelog-csv-v2.column-delimiter' = '|'
 );
 
-select * from UserScores;
+select * from UserScores2;
 ```
 ```shell
 

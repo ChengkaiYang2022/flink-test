@@ -33,10 +33,10 @@ import org.apache.flink.table.factories.FactoryUtil;
  * <p>The example implements a table source with a decoding format that supports changelog
  * semantics.
  *
- * <p>The {@link SocketDynamicTableFactory} illustrates how connector components play together. It
+ * <p>The {@link } illustrates how connector components play together. It
  * can serve as a reference implementation for implementing own connectors and/or formats.
  *
- * <p>The {@link SocketDynamicTableSource} uses a simple single-threaded {@link SourceFunction} to
+ * <p>The {@link } uses a simple single-threaded {@link SourceFunction} to
  * open a socket that listens for incoming bytes. The raw bytes are decoded into rows by a pluggable
  * format. The format expects a changelog flag as the first column.
  *

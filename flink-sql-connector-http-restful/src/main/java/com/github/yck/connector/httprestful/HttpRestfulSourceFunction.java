@@ -5,7 +5,6 @@ import com.github.yck.connector.util.ResultGenerator;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import jdk.internal.org.objectweb.asm.Handle;
 import org.apache.commons.io.IOUtils;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.RuntimeContextInitializationContextAdapters;
