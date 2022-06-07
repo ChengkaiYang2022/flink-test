@@ -31,6 +31,7 @@ import org.apache.flink.types.RowKind;
 import org.apache.flink.util.Collector;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,18 +91,14 @@ public final class HttpRestfulJsonDeserializer implements DeserializationRestful
      * @return
      */
     @Override
-    public RowData deserialize(byte[] message) {
+    public RowData deserialize(byte[] message) throws IOException {
         // parse the columns including a changelog flag
         Map<String,Object> word = new HashMap<>();
         Row row = Row.withNames();
 
-        try {
-            word = objectMapper.readValue(message, Map.class);
-            for (String s : word.keySet()) {
+        word = objectMapper.readValue(message, Map.class);
+        for (String s : word.keySet()) {
                 row.setField(s,word.get(s));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         // convert to internal data structure
@@ -129,5 +126,11 @@ public final class HttpRestfulJsonDeserializer implements DeserializationRestful
         RowData rowData = this.deserialize(message);
         rowData.setRowKind(rowKind);
         return rowData;
+    }
+
+    @Override
+    public List<RowData> deserializeJsonListWithRowKind(byte[] message, RowKind rowKind) {
+        List<RowData> t = new ArrayList<>();
+        return t;
     }
 }

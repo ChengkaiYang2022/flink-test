@@ -66,11 +66,13 @@ public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
             currentHttpServer = HttpServer.create(new InetSocketAddress(this.port), 0);
 
             currentHttpServer.createContext(this.path,new HttpHandler(){
-                private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
-                    byte[] bytes = IOUtils.toByteArray(he.getRequestBody());
-                    // bytes -> json -> RowData cause json format is so much better than csv
-                    RowData rowData = deserializer.deserializeSingleJsonStringWithRowKind(bytes, rowKind);
+                private void deserializeAndCollectData(byte[] bytes,RowKind rowKind) throws IOException {
+                    RowData  rowData = deserializer.deserializeSingleJsonStringWithRowKind(bytes, rowKind);
                     ctx.collect(rowData);
+                }
+                private void responseToClientAndAcceptData(HttpExchange he,RowKind rowKind) throws IOException {
+                    // bytes -> json -> RowData cause json format is so much better than csv
+                    deserializeAndCollectData(IOUtils.toByteArray(he.getRequestBody()), rowKind);
                     String responseBody = ResultGenerator.getCodeAndResult(HttpURLConnection.HTTP_OK,"success").toString();
                     he.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBody.length());
                     he.getResponseBody().write(IOUtils.toByteArray(new StringReader(responseBody), "UTF-8"));
