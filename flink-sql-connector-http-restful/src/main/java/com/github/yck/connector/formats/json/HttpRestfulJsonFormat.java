@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.github.yck.connector.httprestful;
+package com.github.yck.connector.formats.json;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;

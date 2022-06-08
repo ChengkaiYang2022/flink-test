@@ -1,31 +1,24 @@
 package com.github.yck.connector.httprestful;
 
-import com.github.yck.connector.util.Result;
+import com.github.yck.connector.formats.json.DeserializationRestfulSchema;
 import com.github.yck.connector.util.ResultGenerator;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.apache.commons.io.IOUtils;
-import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.RuntimeContextInitializationContextAdapters;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.connector.datagen.table.types.RowDataGenerator;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
-import org.apache.flink.table.data.GenericRowData;
 import org.apache.flink.table.data.RowData;
 import org.apache.flink.types.RowKind;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class HttpRestfulSourceFunction extends RichSourceFunction<RowData>
         implements ResultTypeQueryable<RowData> {

@@ -1,6 +1,6 @@
 package com.github.yck.connector.httprestful;
 
-import org.apache.flink.api.common.serialization.DeserializationSchema;
+import com.github.yck.connector.formats.json.DeserializationRestfulSchema;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.table.connector.ChangelogMode;
 import org.apache.flink.table.connector.format.DecodingFormat;

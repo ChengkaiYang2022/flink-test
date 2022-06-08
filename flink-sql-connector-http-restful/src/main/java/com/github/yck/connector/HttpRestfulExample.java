@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.github.yck.connector.httprestful;
+package com.github.yck.connector;
 
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

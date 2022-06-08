@@ -14,4 +14,4 @@
 # limitations under the License.
 
 com.github.yck.connector.httprestful.HttpRestfulDynamicTableFactory
-com.github.yck.connector.httprestful.HttpRestfulJsonFormatFactory
+com.github.yck.connector.formats.json.HttpRestfulJsonFormatFactory
